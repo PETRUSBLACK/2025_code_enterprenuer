@@ -1,4 +1,5 @@
 import requests
+# import json
 
 # endpoint = "https://httpbin.org/status/200/"
 # endpoint = "https://httpbin.org/anything"
@@ -19,7 +20,7 @@ print(data)
 data['params'] = dict(request.GET)
 data['headers'] = dict(request.headers)
 data['content_type'] = request.content_type
-return JsonResponse(data)
+    return JsonResponse(data)
 
 # print(get_response.json())
 # print(get_response.status_code)

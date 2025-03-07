@@ -1,5 +1,5 @@
 django
-djangorestframeword
+djangorestframework
 pyyaml
-reuests
+requests
 django-cors-headers
