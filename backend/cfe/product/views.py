@@ -5,6 +5,7 @@ from . models import Product
 from .serializers import ProductSerializers
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from rest_framework.response import Response
 
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
@@ -25,9 +26,29 @@ product_list_create_view = ProductListCreateAPIView.as_view()
 class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializers
-    # lookup_field = 'pk'
+    lookup_field = 'pk'
+
+
+class ProductUpdateAPIView(generics.UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializers
+    lookup_field = 'pk'
     
-@api_view(['GET', 'POST']) 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if not instance.content:
+            instance.content = intance.title
+            
+class ProductDeleteAPIView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializers
+    lookup_field = 'pk'
+    
+    def perform_destroy(self, instance):
+        super().perform_destroy(instance)
+
+
+# @api_view(['GET', 'POST']) 
 def product_alt_view(request, pk=None, *args, **kwargs):
     
     method = request.method
@@ -48,7 +69,7 @@ def product_alt_view(request, pk=None, *args, **kwargs):
         return Response(data)
     
     if method == "POST":
-        pass
+        # pass
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             instance = serializer.save()
