@@ -1,13 +1,21 @@
 import requests
-
-endpoint = "http://127.0.0.1:7000/api/products/"
-
-data = {
-    "title": "This field is done",
-    "price": 13.39
-}
-
-get_response = requests.get(endpoint)
+from getpass import getpass
 
 
-print(get_response.json())
+auth_endpoint = "http://127.0.0.1:7000/api/auth/"
+username = input("What is your username ?\n")
+password = getpass("What is your password?\n")
+
+auth_response = requests.post(auth_endpoint, json={"username": username, "password": password})
+
+if auth_response.status_code == 200:
+    token = auth_response.json()['token']
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    endpoint = "http://127.0.0.1:7000/api/products/"
+    get_response = requests.get(endpoint, headers)
+    print(get_response.json())
+
+
+# print(get_response.json())
